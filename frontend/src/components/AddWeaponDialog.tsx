@@ -71,7 +71,6 @@ const AddWeaponDialog: React.FC<Props> = ({ open, onClose, onWeaponAdd }) => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ baseWeapon, parts, sendToPrinter }),
     });
-    console.log('response from handle save', res);
 
     const newWeapon: CustomizedWeapon = await res.json();
     onWeaponAdd(newWeapon);
