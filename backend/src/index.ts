@@ -34,7 +34,7 @@ app.post('/customize', (req: Request, res: Response) => {
     req.body;
 
   const newWeapon: CustomizedWeapon = {
-    id: idCounter++,
+    id: idCounter++, //generateUniqueId(),
     baseWeapon,
     parts,
     sentToPrinter: !!sendToPrinter,

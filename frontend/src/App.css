@@ -1,8 +1,19 @@
+body {
+  margin: 0;
+  display: flex;
+  justify-content: center; /* Centers the content horizontally */
+  align-items: center; /* Centers the content vertically */
+  min-width: 320px;
+  width: 100%; /* Ensure body takes full width */
+  height: 100vh;
+}
+
 #root {
-  max-width: 1280px;
-  margin: 0 auto;
+  width: 100%; /* Ensure root container is 100% width */
+  height: 100%; /* Take full height */
+  display: flex;
+  justify-content: center;
   padding: 2rem;
-  text-align: center;
 }
 
 .logo {

@@ -6,11 +6,11 @@ export interface WeaponParts {
 }
 
 export interface CustomizedWeapon {
-  id: number;
+  id?: string;
   baseWeapon: string;
   parts: WeaponParts;
   sentToPrinter: boolean;
-  createdAt: string;
+  createdAt?: string;
 }
 
 export interface WeaponPart {

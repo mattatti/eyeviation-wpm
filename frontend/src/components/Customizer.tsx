@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import weaponData from '../data/weaponParts.json';
+import weaponData from '../data/weaponsData';
 import { CustomizedWeapon, WeaponParts, WeaponPartsData } from '../types';
 
 interface Props {
