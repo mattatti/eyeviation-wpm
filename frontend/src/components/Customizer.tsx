@@ -59,7 +59,7 @@ const Customizer: React.FC<Props> = ({ onWeaponAdd }) => {
       body: JSON.stringify(weapon),
     })
       .then((res) => res.json())
-      .then((data) => {
+      .then(() => {
         alert(`Weapon sent to printer!`);
       })
       .catch((err) => {

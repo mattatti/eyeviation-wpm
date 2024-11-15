@@ -1,4 +1,4 @@
-import { Delete, Edit, Info, Print } from '@mui/icons-material';
+import { Delete, Info, Print } from '@mui/icons-material';
 import {
   Box,
   Button,
@@ -18,16 +18,12 @@ import { CustomizedWeapon } from '../types';
 interface WeaponTableProps {
   weapons: CustomizedWeapon[];
   onDelete: (id: string) => void;
-  onEdit: (id: string) => void;
-  onDetails: (weapon: CustomizedWeapon) => void;
   onPrint: (id: string) => void;
 }
 
 const WeaponTable: React.FC<WeaponTableProps> = ({
   weapons,
   onDelete,
-  onEdit,
-  onDetails,
   onPrint,
 }) => {
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -84,9 +80,7 @@ const WeaponTable: React.FC<WeaponTableProps> = ({
             <IconButton color='primary' onClick={() => onPrint(weapon.id)}>
               <Print />
             </IconButton>
-            <IconButton color='secondary' onClick={() => onEdit(weapon.id)}>
-              <Edit />
-            </IconButton>
+
             <IconButton color='error' onClick={() => onDelete(weapon.id)}>
               <Delete />
             </IconButton>

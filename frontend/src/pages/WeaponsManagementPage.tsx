@@ -32,23 +32,47 @@ const WeaponsManagementPage: React.FC = () => {
     setDialogOpen(false);
   };
 
-  const handleDelete = (id: string) => {
-    setWeapons(weapons.filter((weapon) => weapon.id !== id));
+  const handleDelete = async (id: string) => {
+    try {
+      const res = await fetch(
+        `${import.meta.env.VITE_API_BASE_URL}/customize/${id}`,
+        {
+          method: 'DELETE',
+        }
+      );
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        console.error(errorData.message || 'Failed to delete weapon');
+        return;
+      }
+
+      // Once deleted, remove the weapon from the list
+      setWeapons(weapons.filter((weapon) => weapon.id !== id));
+    } catch (err) {
+      console.error(err);
+    }
   };
 
-  const handleEdit = (id: string) => {
-    // Handle edit logic
-    console.log('Edit weapon with ID:', id);
-  };
-
-  const handleDetails = (weapon: CustomizedWeapon) => {
-    // Handle details logic
-    console.log('Weapon details:', weapon);
-  };
-
-  const handlePrint = (id: string) => {
-    // Handle print logic
-    console.log('Print weapon with ID:', id);
+  const handlePrint = async (id: string) => {
+    await fetch(`${import.meta.env.VITE_API_BASE_URL}/customize/print/ `, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id }),
+    })
+      .then(async (res) => {
+        if (res.ok) {
+          const data = await res.json();
+          alert(data.message);
+        } else {
+          const errorData = await res.json();
+          alert(errorData.message || 'Failed to send weapon to printer');
+        }
+      })
+      .catch((err) => {
+        alert('Failed to send weapon to printer');
+        console.error(err);
+      });
   };
 
   return (
@@ -75,8 +99,6 @@ const WeaponsManagementPage: React.FC = () => {
       <WeaponTable
         weapons={weapons}
         onDelete={handleDelete}
-        onEdit={handleEdit}
-        onDetails={handleDetails}
         onPrint={handlePrint}
       />
     </Box>

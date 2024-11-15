@@ -65,30 +65,57 @@ const AddWeaponDialog: React.FC<Props> = ({ open, onClose, onWeaponAdd }) => {
     setParts((prevParts) => ({ ...prevParts, [part]: value }));
   };
 
-  const handleSave = async (isPrint: boolean) => {
-    const newWeapon: CustomizedWeapon = {
-      baseWeapon,
-      parts,
-      sentToPrinter: false,
-    };
+  const handleSave = async (sendToPrinter: boolean) => {
+    const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/customize`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ baseWeapon, parts, sendToPrinter }),
+    });
+    console.log('response from handle save', res);
 
-    // Assuming you're sending the data to a backend to save
-    const res = await fetch(
-      `${import.meta.env.VITE_API_BASE_URL}/customize${
-        isPrint ? '/print' : ''
-      }`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(newWeapon),
-      }
-    );
+    const newWeapon: CustomizedWeapon = await res.json();
+    onWeaponAdd(newWeapon);
 
-    // Once saved, update the parent component
-    const savedWeapon = await res.json();
-
-    onWeaponAdd(savedWeapon);
+    if (sendToPrinter) {
+      // Call the print API
+      await sendWeaponToPrinter(newWeapon);
+    }
     onClose();
+    handleReset();
+  };
+
+  // Call the print API
+  const sendWeaponToPrinter = async (weapon: CustomizedWeapon) => {
+    await fetch(`${import.meta.env.VITE_API_BASE_URL}/customize/print`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(weapon),
+    })
+      .then(async (res) => {
+        if (res.ok) {
+          const data = await res.json();
+          alert(data.message);
+          onClose();
+          handleReset();
+        } else {
+          const errorData = await res.json();
+          alert(errorData.message || 'Failed to send weapon to printer');
+        }
+      })
+      .catch((err) => {
+        alert('Failed to send weapon to printer');
+        console.error(err);
+      });
+  };
+
+  const handleReset = () => {
+    setBaseWeapon('');
+    setParts({
+      sight: '',
+      laserPointer: '',
+      gripHandle: '',
+      barrelAttachment: '',
+    });
   };
 
   return (
@@ -198,7 +225,13 @@ const AddWeaponDialog: React.FC<Props> = ({ open, onClose, onWeaponAdd }) => {
         </FormControl>
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose} color='primary'>
+        <Button
+          onClick={() => {
+            onClose();
+            handleReset();
+          }}
+          color='primary'
+        >
           Cancel
         </Button>
         <Button

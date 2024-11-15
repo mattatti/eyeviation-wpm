@@ -34,7 +34,7 @@ app.post('/customize', (req: Request, res: Response) => {
     req.body;
 
   const newWeapon: CustomizedWeapon = {
-    id: idCounter++, //generateUniqueId(),
+    id: idCounter++, //TODO: generateUniqueId(),
     baseWeapon,
     parts,
     sentToPrinter: !!sendToPrinter,
@@ -65,9 +65,49 @@ app.post('/customize/print', (req: Request, res: Response) => {
   }
 
   weapon.sentToPrinter = true;
-  console.log(`Weapon ID ${id} sent to printer`);
+  console.log(`${weapon.baseWeapon} sent to printer`);
 
-  res.json({ message: `Weapon ID ${id} sent to printer` });
+  res.json({ message: `${weapon.baseWeapon} sent to printer` });
 });
 
+// Example Express.js route handler
+app.delete('/customize/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    // Assuming a delete function exists in your database logic
+    await deleteWeaponById(id);
+    res.status(200).json({ message: 'Weapon deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to delete weapon', error });
+  }
+});
+
+// Example Express.js route handler
+app.put('/customize/:id', async (req, res) => {
+  const { id } = req.params;
+  const updatedWeapon = req.body; // Assuming the updated weapon details are in the request body
+
+  try {
+    // Assuming an update function exists in your database logic
+    const weapon = await updateWeaponById(id, updatedWeapon);
+    res.status(200).json({ message: 'Weapon updated successfully', weapon });
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to update weapon', error });
+  }
+});
+//TODO: add db
+// Dummy functions to simulate DB operations
+const deleteWeaponById = async (id: string) => {
+  // Perform the deletion from DB
+  console.log(`Weapon with ID: ${id} deleted`);
+};
+
+const updateWeaponById = async (
+  id: string,
+  updatedWeapon: CustomizedWeapon
+) => {
+  // Perform the update in DB
+  console.log(`Weapon with ID: ${id} updated`, updatedWeapon);
+  return { updatedWeapon }; // Simulate returned updated weapon
+};
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
