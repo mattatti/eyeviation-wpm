@@ -1,0 +1,31 @@
+{
+  "weapons": ["Glock 17", "M4", "FN Minimi"],
+  "parts": {
+    "sights": [
+      { "name": "Mepro - MPO PRO-F", "compatibleWith": ["Glock 17"] },
+      { "name": "Mepro - Hunter 4x", "compatibleWith": ["M4"] },
+      { "name": "Mepro - MMX 3", "compatibleWith": ["M4", "FN Minimi"] }
+    ],
+    "laserPointers": [
+      { "name": "Nightstick - TSM11G", "compatibleWith": ["Glock 17"] },
+      { "name": "Wilcox - RAAM GSS", "compatibleWith": ["M4"] },
+      { "name": "Wilcox - Raid Xe", "compatibleWith": ["FN Minimi"] }
+    ],
+    "gripHandles": [
+      {
+        "name": "MCK - Micro Conversion Kit Gen 2",
+        "compatibleWith": ["Glock 17"]
+      },
+      { "name": "Law - Grip-Pod Forgerip", "compatibleWith": ["M4"] },
+      {
+        "name": "BravoCo - Vertical Grip Mod 3",
+        "compatibleWith": ["FN Minimi"]
+      }
+    ],
+    "barrelAttachments": [
+      { "name": "Banish - Banish 45", "compatibleWith": ["Glock 17"] },
+      { "name": "Midwest - Muzzle Break", "compatibleWith": ["M4"] },
+      { "name": "Midwest - Blast Diverter", "compatibleWith": ["FN Minimi"] }
+    ]
+  }
+}
