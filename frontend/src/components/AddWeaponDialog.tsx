@@ -66,11 +66,14 @@ const AddWeaponDialog: React.FC<Props> = ({ open, onClose, onWeaponAdd }) => {
   };
 
   const handleSave = async (sendToPrinter: boolean) => {
-    const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/customize`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ baseWeapon, parts, sendToPrinter }),
-    });
+    const res = await fetch(
+      `${import.meta.env.VITE_API_BASE_URL}/api/customize`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ baseWeapon, parts, sendToPrinter }),
+      }
+    );
 
     const newWeapon: CustomizedWeapon = await res.json();
     onWeaponAdd(newWeapon);
@@ -85,7 +88,7 @@ const AddWeaponDialog: React.FC<Props> = ({ open, onClose, onWeaponAdd }) => {
 
   // Call the print API
   const sendWeaponToPrinter = async (weapon: CustomizedWeapon) => {
-    await fetch(`${import.meta.env.VITE_API_BASE_URL}/customize/print`, {
+    await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/customize/print`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(weapon),

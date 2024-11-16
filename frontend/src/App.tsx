@@ -1,11 +1,11 @@
 // app.tsx
 import React from 'react';
-import WeaponsManagementPage from './pages/WeaponsManagementPage';
+import WeaponsManagement from './pages/WeaponsManagement';
 
 const App: React.FC = () => {
   return (
     <div className='App'>
-      <WeaponsManagementPage />
+      <WeaponsManagement />
     </div>
   );
 };

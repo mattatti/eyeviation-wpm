@@ -4,13 +4,13 @@ import AddWeaponDialog from '../components/AddWeaponDialog';
 import WeaponTable from '../components/WeaponsTable';
 import { CustomizedWeapon } from '../types';
 
-const WeaponsManagementPage: React.FC = () => {
+const WeaponsManagement: React.FC = () => {
   const [weapons, setWeapons] = useState<CustomizedWeapon[]>([]);
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
 
   const fetchWeapons = async () => {
     const response = await fetch(
-      `${import.meta.env.VITE_API_BASE_URL}/customize`
+      `${import.meta.env.VITE_API_BASE_URL}/api/customize`
     );
     const data = await response.json();
     setWeapons(data);
@@ -35,7 +35,7 @@ const WeaponsManagementPage: React.FC = () => {
   const handleDelete = async (id: string) => {
     try {
       const res = await fetch(
-        `${import.meta.env.VITE_API_BASE_URL}/customize/${id}`,
+        `${import.meta.env.VITE_API_BASE_URL}/api/customize/${id}`,
         {
           method: 'DELETE',
         }
@@ -55,7 +55,7 @@ const WeaponsManagementPage: React.FC = () => {
   };
 
   const handlePrint = async (id: string) => {
-    await fetch(`${import.meta.env.VITE_API_BASE_URL}/customize/print/ `, {
+    await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/customize/print/ `, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ id }),
@@ -105,4 +105,4 @@ const WeaponsManagementPage: React.FC = () => {
   );
 };
 
-export default WeaponsManagementPage;
+export default WeaponsManagement;
