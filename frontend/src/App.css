@@ -13,7 +13,7 @@ body {
   height: 100%; /* Take full height */
   display: flex;
   justify-content: center;
-  padding: 2rem;
+  padding: 10rem;
 }
 
 .logo {

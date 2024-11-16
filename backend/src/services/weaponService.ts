@@ -1,4 +1,6 @@
-import CustomizedWeapon, { CustomizedWeaponAttributes } from '../models/weapon';
+import CustomizedWeapon, {
+  CustomizedWeaponAttributes,
+} from '../models/CustomizedWeapon';
 
 export const createWeapon = async (data: CustomizedWeaponAttributes) => {
   return await CustomizedWeapon.create(data);

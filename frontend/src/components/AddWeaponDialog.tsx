@@ -10,6 +10,7 @@ import {
   Select,
 } from '@mui/material';
 import React, { useEffect, useState } from 'react';
+import { useNotification } from '../context/NotificationContext';
 import { weaponsData } from '../data/weaponsData';
 import { CustomizedWeapon, WeaponParts } from '../types';
 
@@ -20,6 +21,7 @@ interface Props {
 }
 
 const AddWeaponDialog: React.FC<Props> = ({ open, onClose, onWeaponAdd }) => {
+  const { addNotification } = useNotification();
   const [baseWeapon, setBaseWeapon] = useState<string>('');
   const [parts, setParts] = useState<WeaponParts>({
     sight: '',
@@ -33,6 +35,8 @@ const AddWeaponDialog: React.FC<Props> = ({ open, onClose, onWeaponAdd }) => {
     gripHandles: [],
     barrelAttachments: [],
   });
+
+  const [isSentToPrinter, setisSentToPrinter] = useState<boolean>(false);
 
   useEffect(() => {
     if (baseWeapon) {
@@ -96,17 +100,20 @@ const AddWeaponDialog: React.FC<Props> = ({ open, onClose, onWeaponAdd }) => {
       .then(async (res) => {
         if (res.ok) {
           const data = await res.json();
-          alert(data.message);
           onClose();
           handleReset();
+          addNotification(data.message);
         } else {
           const errorData = await res.json();
-          alert(errorData.message || 'Failed to send weapon to printer');
+          console.error(
+            errorData.message || 'Failed to send weapon to printer'
+          );
+          addNotification(`Failed to print weapon: ${errorData.message}`);
         }
       })
       .catch((err) => {
-        alert('Failed to send weapon to printer');
         console.error(err);
+        addNotification(`Failed to print weapon: ${err.message}`);
       });
   };
 
@@ -257,3 +264,31 @@ const AddWeaponDialog: React.FC<Props> = ({ open, onClose, onWeaponAdd }) => {
 };
 
 export default AddWeaponDialog;
+
+////////
+
+// Fetch base weapons
+// const fetchBaseWeapons = async () => {
+//   const response = await fetch('/api/base-weapons');
+//   const data = await response.json();
+//   return data; // List of base weapons
+// };
+
+// // Fetch attachments by type
+// const fetchAttachmentsByType = async (type) => {
+//   const response = await fetch(`/api/attachments/${type}`);
+//   const data = await response.json();
+//   return data; // List of attachments for the given type
+// };
+
+// // Usage in your Add Weapon Dialog
+// (async () => {
+//   const baseWeapons = await fetchBaseWeapons();
+//   console.log('Base Weapons:', baseWeapons);
+
+//   const sights = await fetchAttachmentsByType('sights');
+//   console.log('Sights:', sights);
+
+//   const laserPointers = await fetchAttachmentsByType('laser-pointers');
+//   console.log('Laser Pointers:', laserPointers);
+// })();

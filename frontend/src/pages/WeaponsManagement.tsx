@@ -77,9 +77,16 @@ const WeaponsManagement: React.FC = () => {
 
   return (
     <Box
-      style={{ margin: 10, display: 'flex', flexDirection: 'column', gap: 10 }}
+      style={{
+        position: 'relative',
+        margin: 10,
+        marginTop: 40,
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 10,
+      }}
     >
-      <Typography fontWeight={'bold'} fontSize={30} color='black'>
+      <Typography fontWeight={'bold'} fontSize={20} color='black'>
         Weapon Printing Management
       </Typography>
       <Button

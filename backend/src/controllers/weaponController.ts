@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import { Attachment, BaseWeapon } from '../models';
 import {
   createWeapon,
   deleteWeapon,
@@ -42,5 +43,33 @@ export const printWeaponController = async (req: Request, res: Response) => {
     res.json({ message: `${weapon.baseWeapon} sent to printer`, weapon });
   } catch (error: any) {
     res.status(500).json({ error: error.message });
+  }
+};
+
+// controllers/weaponController.ts
+
+// Get the list of all base weapons
+export const getBaseWeapons = async (req: Request, res: Response) => {
+  try {
+    const baseWeapons = await BaseWeapon.findAll();
+    res.status(200).json(baseWeapons);
+  } catch (error) {
+    console.error('Error fetching base weapons:', error);
+    res.status(500).json({ message: 'Failed to fetch base weapons' });
+  }
+};
+
+// Get attachments for each type
+export const getAttachmentsByType = async (req: Request, res: Response) => {
+  try {
+    const attachmentType = req.params.type; // Extract the attachment type from the route
+    const attachments = await Attachment.findAll({
+      where: { type: attachmentType },
+    });
+
+    res.status(200).json(attachments);
+  } catch (error) {
+    console.error('Error fetching attachments:', error);
+    res.status(500).json({ message: 'Failed to fetch attachments' });
   }
 };

@@ -1,5 +1,7 @@
+// models/CustomizedWeapon.ts
 import { DataTypes, Model } from 'sequelize';
 import { sequelize } from '../config/db';
+import { BaseWeapon } from './baseWeapon';
 
 export interface WeaponParts {
   sight: string;
@@ -10,7 +12,7 @@ export interface WeaponParts {
 
 export interface CustomizedWeaponAttributes {
   id?: number;
-  baseWeapon: string;
+  baseWeapon: string; // References a BaseWeapon's ID
   parts: WeaponParts;
   sentToPrinter: boolean;
   createdAt?: Date;
@@ -28,6 +30,10 @@ CustomizedWeapon.init(
     baseWeapon: {
       type: DataTypes.STRING,
       allowNull: false,
+      references: {
+        model: BaseWeapon,
+        key: 'id',
+      },
     },
     parts: {
       type: DataTypes.JSONB,
@@ -42,7 +48,11 @@ CustomizedWeapon.init(
       defaultValue: DataTypes.NOW,
     },
   },
-  { sequelize, modelName: 'CustomizedWeapon', tableName: 'weapons' }
+  { sequelize, modelName: 'CustomizedWeapon', tableName: 'customized_weapons' }
 );
+
+// You may want to establish relationships for fetching data later
+BaseWeapon.hasMany(CustomizedWeapon, { foreignKey: 'baseWeapon' });
+CustomizedWeapon.belongsTo(BaseWeapon, { foreignKey: 'baseWeapon' });
 
 export default CustomizedWeapon;
