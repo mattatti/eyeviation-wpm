@@ -13,7 +13,7 @@ app.use('/api', weaponRoutes);
 
 // Sync the database and insert data after connection is successful
 sequelize
-  .sync({ force: true }) // Use `force: true` for recreating the tables during development, but avoid in production
+  .sync({ force: false }) // Use `force: true` for recreating the tables during development, but avoid in production
   .then(async () => {
     console.log('Database connected');
 

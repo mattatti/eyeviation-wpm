@@ -11,7 +11,6 @@ import {
 } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useNotification } from '../context/NotificationContext';
-import { weaponsData } from '../data/weaponsData';
 import { CustomizedWeapon, WeaponParts } from '../types';
 
 interface Props {
@@ -22,6 +21,14 @@ interface Props {
 
 const AddWeaponDialog: React.FC<Props> = ({ open, onClose, onWeaponAdd }) => {
   const { addNotification } = useNotification();
+  const [baseWeapons, setBaseWeapons] = useState<any[]>([]);
+  const [attachments, setAttachments] = useState<any>({
+    sights: [],
+    laserPointers: [],
+    gripHandles: [],
+    barrelAttachments: [],
+  });
+
   const [baseWeapon, setBaseWeapon] = useState<string>('');
   const [parts, setParts] = useState<WeaponParts>({
     sight: '',
@@ -29,41 +36,73 @@ const AddWeaponDialog: React.FC<Props> = ({ open, onClose, onWeaponAdd }) => {
     gripHandle: '',
     barrelAttachment: '',
   });
-  const [availableParts, setAvailableParts] = useState<any>({
-    sights: [],
-    laserPointers: [],
-    gripHandles: [],
-    barrelAttachments: [],
-  });
 
-  const [isSentToPrinter, setisSentToPrinter] = useState<boolean>(false);
+  useEffect(() => {
+    if (open) {
+      fetchBaseWeapons();
+    }
+  }, [open]);
 
   useEffect(() => {
     if (baseWeapon) {
-      // Filter parts based on the selected base weapon
-      setAvailableParts({
-        sights: weaponsData.sights.filter((part) =>
-          part.compatibleWith.includes(baseWeapon)
-        ),
-        laserPointers: weaponsData.laserPointers.filter((part) =>
-          part.compatibleWith.includes(baseWeapon)
-        ),
-        gripHandles: weaponsData.gripHandles.filter((part) =>
-          part.compatibleWith.includes(baseWeapon)
-        ),
-        barrelAttachments: weaponsData.barrelAttachments.filter((part) =>
-          part.compatibleWith.includes(baseWeapon)
-        ),
-      });
+      fetchAttachmentsForBaseWeapon(baseWeapon);
     } else {
-      setAvailableParts({
-        sights: [],
-        laserPointers: [],
-        gripHandles: [],
-        barrelAttachments: [],
-      });
+      resetAttachments();
     }
   }, [baseWeapon]);
+
+  const fetchBaseWeapons = async () => {
+    try {
+      const res = await fetch(
+        `${import.meta.env.VITE_API_BASE_URL}/api/base-weapons`
+      );
+      const data = await res.json();
+      setBaseWeapons(data);
+    } catch (error) {
+      console.error('Failed to fetch base weapons:', error);
+      addNotification('Failed to fetch base weapons');
+    }
+  };
+
+  const fetchAttachmentsForBaseWeapon = async (weaponId: string) => {
+    try {
+      const types = [
+        'sight',
+        'laser pointer',
+        'grip handle',
+        'barrel attachment',
+      ];
+      const attachmentsData = await Promise.all(
+        types.map((type) =>
+          fetch(
+            `${
+              import.meta.env.VITE_API_BASE_URL
+            }/api/attachments/${type}?weaponId=${weaponId}`
+          ).then((res) => res.json())
+        )
+      );
+
+      setAttachments({
+        sights: attachmentsData[0],
+        laserPointers: attachmentsData[1],
+        gripHandles: attachmentsData[2],
+        barrelAttachments: attachmentsData[3],
+      });
+      console.log('attachments ', attachments);
+    } catch (error) {
+      console.error('Failed to fetch attachments:', error);
+      addNotification('Failed to fetch attachments');
+    }
+  };
+
+  const resetAttachments = () => {
+    setAttachments({
+      sights: [],
+      laserPointers: [],
+      gripHandles: [],
+      barrelAttachments: [],
+    });
+  };
 
   const handlePartChange = (part: keyof WeaponParts, value: string) => {
     setParts((prevParts) => ({ ...prevParts, [part]: value }));
@@ -90,7 +129,6 @@ const AddWeaponDialog: React.FC<Props> = ({ open, onClose, onWeaponAdd }) => {
     handleReset();
   };
 
-  // Call the print API
   const sendWeaponToPrinter = async (weapon: CustomizedWeapon) => {
     await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/customize/print`, {
       method: 'POST',
@@ -125,21 +163,28 @@ const AddWeaponDialog: React.FC<Props> = ({ open, onClose, onWeaponAdd }) => {
       gripHandle: '',
       barrelAttachment: '',
     });
+    resetAttachments();
+  };
+
+  const camelToReadable = (str: string) => {
+    // Add spaces before capital letters and capitalize the first letter of each word
+    return str
+      .replace(/([a-z0-9])([A-Z])/g, '$1 $2')
+      .replace(/^./, (match) => match.toUpperCase());
   };
 
   return (
     <Dialog open={open} onClose={onClose}>
       <DialogTitle fontSize={20}>Add Weapon</DialogTitle>
       <DialogContent style={{ width: '500px' }}>
-        {/* Base Weapon Select */}
         <FormControl required size='small' fullWidth margin='normal'>
           <InputLabel>Base Weapon</InputLabel>
           <Select
-            value={baseWeapon}
+            value={baseWeapon || ''}
             onChange={(e) => setBaseWeapon(e.target.value)}
             label='Base Weapon'
           >
-            {weaponsData.baseWeapons.map((weapon) => (
+            {baseWeapons.map((weapon) => (
               <MenuItem key={weapon.id} value={weapon.id}>
                 {weapon.name}
               </MenuItem>
@@ -147,100 +192,35 @@ const AddWeaponDialog: React.FC<Props> = ({ open, onClose, onWeaponAdd }) => {
           </Select>
         </FormControl>
 
-        {/* Weapon Parts - Sight */}
-        <FormControl
-          size='small'
-          fullWidth
-          margin='normal'
-          disabled={!baseWeapon}
-        >
-          <InputLabel>Sight</InputLabel>
-          <Select
-            value={parts.sight}
-            onChange={(e) => handlePartChange('sight', e.target.value)}
-            label='Sight'
-          >
-            {availableParts.sights.map((sight: any) => (
-              <MenuItem key={sight.id} value={sight.id}>
-                {sight.name}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-
-        {/* Weapon Parts - Laser Pointer */}
-        <FormControl
-          size='small'
-          fullWidth
-          margin='normal'
-          disabled={!baseWeapon}
-        >
-          <InputLabel>Laser Pointer</InputLabel>
-          <Select
-            value={parts.laserPointer}
-            onChange={(e) => handlePartChange('laserPointer', e.target.value)}
-            label='Laser Pointer'
-          >
-            {availableParts.laserPointers.map((laserPointer: any) => (
-              <MenuItem key={laserPointer.id} value={laserPointer.id}>
-                {laserPointer.name}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-
-        {/* Weapon Parts - Grip Handle */}
-        <FormControl
-          size='small'
-          fullWidth
-          margin='normal'
-          disabled={!baseWeapon}
-        >
-          <InputLabel>Grip Handle</InputLabel>
-          <Select
-            value={parts.gripHandle}
-            onChange={(e) => handlePartChange('gripHandle', e.target.value)}
-            label='Grip Handle'
-          >
-            {availableParts.gripHandles.map((gripHandle: any) => (
-              <MenuItem key={gripHandle.id} value={gripHandle.id}>
-                {gripHandle.name}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-
-        {/* Weapon Parts - Barrel Attachment */}
-        <FormControl
-          size='small'
-          fullWidth
-          margin='normal'
-          disabled={!baseWeapon}
-        >
-          <InputLabel>Barrel Attachment</InputLabel>
-          <Select
-            value={parts.barrelAttachment}
-            onChange={(e) =>
-              handlePartChange('barrelAttachment', e.target.value)
-            }
-            label='Barrel Attachment'
-          >
-            {availableParts.barrelAttachments.map((barrelAttachment: any) => (
-              <MenuItem key={barrelAttachment.id} value={barrelAttachment.id}>
-                {barrelAttachment.name}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+        {['sight', 'laserPointer', 'gripHandle', 'barrelAttachment'].map(
+          (part) => (
+            <FormControl
+              size='small'
+              fullWidth
+              margin='normal'
+              disabled={!baseWeapon}
+              key={part}
+            >
+              <InputLabel>{camelToReadable(part)}</InputLabel>
+              <Select
+                value={parts[part as keyof WeaponParts]}
+                onChange={(e) =>
+                  handlePartChange(part as keyof WeaponParts, e.target.value)
+                }
+                label={camelToReadable(part)}
+              >
+                {attachments[`${part}s`]?.map((item: any) => (
+                  <MenuItem key={item.id} value={item.id}>
+                    {item.name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          )
+        )}
       </DialogContent>
       <DialogActions>
-        <Button
-          onClick={() => {
-            onClose();
-            handleReset();
-          }}
-          color='primary'
-        >
+        <Button onClick={onClose} color='primary'>
           Cancel
         </Button>
         <Button
@@ -250,7 +230,6 @@ const AddWeaponDialog: React.FC<Props> = ({ open, onClose, onWeaponAdd }) => {
         >
           Save
         </Button>
-
         <Button
           disabled={!baseWeapon}
           onClick={() => handleSave(true)}
@@ -264,31 +243,3 @@ const AddWeaponDialog: React.FC<Props> = ({ open, onClose, onWeaponAdd }) => {
 };
 
 export default AddWeaponDialog;
-
-////////
-
-// Fetch base weapons
-// const fetchBaseWeapons = async () => {
-//   const response = await fetch('/api/base-weapons');
-//   const data = await response.json();
-//   return data; // List of base weapons
-// };
-
-// // Fetch attachments by type
-// const fetchAttachmentsByType = async (type) => {
-//   const response = await fetch(`/api/attachments/${type}`);
-//   const data = await response.json();
-//   return data; // List of attachments for the given type
-// };
-
-// // Usage in your Add Weapon Dialog
-// (async () => {
-//   const baseWeapons = await fetchBaseWeapons();
-//   console.log('Base Weapons:', baseWeapons);
-
-//   const sights = await fetchAttachmentsByType('sights');
-//   console.log('Sights:', sights);
-
-//   const laserPointers = await fetchAttachmentsByType('laser-pointers');
-//   console.log('Laser Pointers:', laserPointers);
-// })();
