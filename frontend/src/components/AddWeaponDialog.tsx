@@ -40,32 +40,6 @@ const AddWeaponDialog: React.FC<Props> = ({ open, onClose, onWeaponAdd }) => {
     barrelAttachment: '',
   });
 
-  useEffect(() => {
-    if (open) {
-      fetchBaseWeapons();
-    }
-  }, [open]);
-
-  useEffect(() => {
-    if (baseWeapon) {
-      fetchAttachmentsForBaseWeapon(baseWeapon);
-    } else {
-      resetAttachments();
-    }
-  }, [baseWeapon]);
-
-  const fetchBaseWeapons = async () => {
-    try {
-      const res = await fetch(
-        `${import.meta.env.VITE_API_BASE_URL}/api/base-weapons`
-      );
-      const data = await res.json();
-      setBaseWeapons(data);
-    } catch (error) {
-      console.error('Failed to fetch base weapons:', error);
-    }
-  };
-
   const fetchAttachmentsForBaseWeapon = async (weaponId: string) => {
     try {
       const types = [
@@ -175,6 +149,48 @@ const AddWeaponDialog: React.FC<Props> = ({ open, onClose, onWeaponAdd }) => {
       .replace(/^./, (match) => match.toUpperCase());
   };
 
+  useEffect(() => {
+    if (open) {
+      fetchBaseWeapons();
+    }
+  }, [open]);
+
+  useEffect(() => {
+    if (baseWeapon) {
+      fetchAttachmentsForBaseWeapon(baseWeapon);
+    } else {
+      resetAttachments();
+    }
+  }, [baseWeapon]);
+
+  const fetchBaseWeapons = async () => {
+    try {
+      const res = await fetch(
+        `${import.meta.env.VITE_API_BASE_URL}/api/base-weapons`
+      );
+      const data = await res.json();
+      setBaseWeapons(data);
+    } catch (error) {
+      console.error('Failed to fetch base weapons:', error);
+    }
+  };
+
+  const avatarForWeaponsAndAttachments = (item: any) => {
+    return (
+      <img
+        loading='lazy'
+        src={item.image_url}
+        alt={item.name}
+        style={{
+          marginRight: '8px',
+          width: '34px',
+          height: '24px',
+          objectFit: 'contain',
+        }}
+      />
+    );
+  };
+
   return (
     <Dialog open={open} onClose={onClose}>
       <DialogTitle style={{ fontSize: 20 }}>Add Weapon</DialogTitle>
@@ -195,17 +211,7 @@ const AddWeaponDialog: React.FC<Props> = ({ open, onClose, onWeaponAdd }) => {
                     gap: '8px',
                   }}
                 >
-                  <img
-                    src={weapon.image_url}
-                    alt={weapon.name}
-                    loading='lazy'
-                    style={{
-                      marginRight: '8px',
-                      width: '34px',
-                      height: '24px',
-                      objectFit: 'contain',
-                    }}
-                  />
+                  {avatarForWeaponsAndAttachments(weapon)}
                   <Typography>{weapon.name}</Typography>
                 </Box>
               </MenuItem>
@@ -239,17 +245,7 @@ const AddWeaponDialog: React.FC<Props> = ({ open, onClose, onWeaponAdd }) => {
                         gap: '8px',
                       }}
                     >
-                      <img
-                        loading='lazy'
-                        src={item.image_url}
-                        alt={item.name}
-                        style={{
-                          marginRight: '8px',
-                          width: '34px',
-                          height: '24px',
-                          objectFit: 'contain',
-                        }}
-                      />
+                      {avatarForWeaponsAndAttachments(item)}
                       <Typography>{item.name}</Typography>
                     </Box>
                   </MenuItem>
