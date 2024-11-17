@@ -17,17 +17,17 @@ app.use('/api', notificationRoutes);
 sequelize
   .sync({ force: false }) // Use `force: true` for recreating the tables during development, but avoid in production
   .then(async () => {
-    console.log('Database connected');
+    console.info('Database connected');
 
     // Insert seed data after the DB connection is established
     try {
       await insertData(); // Call the seed function
-      console.log('Data inserted successfully!');
+      console.info('Data inserted successfully!');
     } catch (error) {
       console.error('Error inserting data:', error);
     }
 
     // Start the server after seeding is done
-    app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+    app.listen(PORT, () => console.info(`Server running on port ${PORT}`));
   })
   .catch((error) => console.error('Database connection failed:', error));

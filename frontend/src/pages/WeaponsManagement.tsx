@@ -28,6 +28,7 @@ const WeaponsManagement: React.FC = () => {
   }, []);
 
   useEffect(() => {
+    // @ts-ignore
     dispatch(fetchNotifications());
   }, [dispatch]);
 
@@ -74,8 +75,9 @@ const WeaponsManagement: React.FC = () => {
       .then(async (res) => {
         if (res.ok) {
           const data = await res.json();
-
+          // @ts-ignore
           dispatch(
+            // @ts-ignore
             addNotificationThunk({
               message: data.message,
             })

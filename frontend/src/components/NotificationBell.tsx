@@ -25,13 +25,11 @@ const NotificationBell: React.FC = () => {
 
   // Fetch notifications when component mounts
   useEffect(() => {
+    // @ts-ignore
     dispatch(fetchNotifications());
   }, [dispatch]);
 
   useEffect(() => {
-    console.log('====================================');
-    console.log('noti', notifications.filter((n: any) => !n.is_read).length);
-    console.log('====================================');
     setUnreadCount(notifications.filter((n: any) => !n.is_read).length);
   }, [notifications]);
 
@@ -39,6 +37,7 @@ const NotificationBell: React.FC = () => {
     setAnchorEl(event.currentTarget); // Set the current target as the anchor element for the menu
 
     // Mark all notifications as read when the bell icon is clicked
+    // @ts-ignore
     dispatch(markAllNotificationsAsRead());
   };
 

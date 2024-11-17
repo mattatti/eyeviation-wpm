@@ -40,7 +40,7 @@ export const printWeaponController = async (req: Request, res: Response) => {
   const { id } = req.body;
   try {
     const weapon: any = await printWeapon(id);
-    console.log(`Weapon ID ${id} (${weapon.baseWeapon}) sent to printer`);
+    console.info(`Weapon ID ${id} (${weapon.baseWeapon}) sent to printer`);
     res.json({ message: `${weapon.baseWeapon} sent to printer`, weapon });
   } catch (error: any) {
     res.status(500).json({ error: error.message });

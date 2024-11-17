@@ -91,7 +91,6 @@ const AddWeaponDialog: React.FC<Props> = ({ open, onClose, onWeaponAdd }) => {
         gripHandles: attachmentsData[2],
         barrelAttachments: attachmentsData[3],
       });
-      console.log('attachments ', attachments);
     } catch (error) {
       console.error('Failed to fetch attachments:', error);
     }
