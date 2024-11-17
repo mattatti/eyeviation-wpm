@@ -1,6 +1,6 @@
 import { DataTypes } from 'sequelize';
 import { sequelize } from '../config/db';
-import Attachment from './Attachment';
+import { Attachment } from './Attachment';
 import { BaseWeapon } from './baseWeapon';
 
 // Define the join table

@@ -1,4 +1,4 @@
-import Attachment from './Attachment';
+import { Attachment } from './Attachment';
 import { AttachmentBaseWeapon } from './attachmentBaseWeapon';
 import { BaseWeapon } from './baseWeapon';
 

@@ -1,4 +1,5 @@
 import {
+  Box,
   Button,
   Dialog,
   DialogActions,
@@ -8,6 +9,7 @@ import {
   InputLabel,
   MenuItem,
   Select,
+  Typography,
 } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
@@ -22,9 +24,6 @@ interface Props {
 
 const AddWeaponDialog: React.FC<Props> = ({ open, onClose, onWeaponAdd }) => {
   const dispatch = useDispatch();
-  // const { notifications, loading, error } = useSelector(
-  //   (state: any) => state.Notification
-  // );
   const [baseWeapons, setBaseWeapons] = useState<any[]>([]);
   const [attachments, setAttachments] = useState<any>({
     sights: [],
@@ -171,7 +170,6 @@ const AddWeaponDialog: React.FC<Props> = ({ open, onClose, onWeaponAdd }) => {
   };
 
   const camelToReadable = (str: string) => {
-    // Add spaces before capital letters and capitalize the first letter of each word
     return str
       .replace(/([a-z0-9])([A-Z])/g, '$1 $2')
       .replace(/^./, (match) => match.toUpperCase());
@@ -179,8 +177,8 @@ const AddWeaponDialog: React.FC<Props> = ({ open, onClose, onWeaponAdd }) => {
 
   return (
     <Dialog open={open} onClose={onClose}>
-      <DialogTitle fontSize={20}>Add Weapon</DialogTitle>
-      <DialogContent style={{ width: '500px' }}>
+      <DialogTitle style={{ fontSize: 20 }}>Add Weapon</DialogTitle>
+      <DialogContent style={{ width: '300px' }}>
         <FormControl required size='small' fullWidth margin='normal'>
           <InputLabel>Base Weapon</InputLabel>
           <Select
@@ -190,7 +188,26 @@ const AddWeaponDialog: React.FC<Props> = ({ open, onClose, onWeaponAdd }) => {
           >
             {baseWeapons.map((weapon) => (
               <MenuItem key={weapon.id} value={weapon.id}>
-                {weapon.name}
+                <Box
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                  }}
+                >
+                  <img
+                    src={weapon.image_url}
+                    alt={weapon.name}
+                    loading='lazy'
+                    style={{
+                      marginRight: '8px',
+                      width: '34px',
+                      height: '24px',
+                      objectFit: 'contain',
+                    }}
+                  />
+                  <Typography>{weapon.name}</Typography>
+                </Box>
               </MenuItem>
             ))}
           </Select>
@@ -215,7 +232,26 @@ const AddWeaponDialog: React.FC<Props> = ({ open, onClose, onWeaponAdd }) => {
               >
                 {attachments[`${part}s`]?.map((item: any) => (
                   <MenuItem key={item.id} value={item.id}>
-                    {item.name}
+                    <Box
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '8px',
+                      }}
+                    >
+                      <img
+                        loading='lazy'
+                        src={item.image_url}
+                        alt={item.name}
+                        style={{
+                          marginRight: '8px',
+                          width: '34px',
+                          height: '24px',
+                          objectFit: 'contain',
+                        }}
+                      />
+                      <Typography>{item.name}</Typography>
+                    </Box>
                   </MenuItem>
                 ))}
               </Select>
