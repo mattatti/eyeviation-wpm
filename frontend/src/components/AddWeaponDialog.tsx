@@ -142,6 +142,7 @@ const AddWeaponDialog: React.FC<Props> = ({ open, onClose, onWeaponAdd }) => {
           onClose();
           handleReset();
           dispatch(
+            //@ts-ignore
             addNotificationThunk({
               message: data.message,
             })
