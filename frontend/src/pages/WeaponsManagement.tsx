@@ -98,9 +98,10 @@ const WeaponsManagement: React.FC = () => {
   return (
     <Box
       style={{
-        position: 'relative',
+        position: 'absolute',
+        top: 10,
+        width: '-webkit-fill-available',
         margin: 10,
-        marginTop: 40,
         display: 'flex',
         flexDirection: 'column',
         gap: 10,
@@ -110,7 +111,7 @@ const WeaponsManagement: React.FC = () => {
         Weapon Printing Management
       </Typography>
       <Button
-        style={{ width: '15vw' }}
+        style={{ width: '150px' }}
         variant='contained'
         color='primary'
         onClick={handleDialogOpen}
