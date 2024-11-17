@@ -1,3 +1,6 @@
+/* index.css */
+
+/* Base styles */
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -12,6 +15,17 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+body {
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 320px;
+  height: 100vh;
+  font-size: 1rem; /* Base font size */
+}
+
+/* Global link styling */
 a {
   font-weight: 500;
   color: #646cff;
@@ -21,20 +35,13 @@ a:hover {
   color: #535bf2;
 }
 
-body {
-  margin: 0;
-  display: flex;
-  justify-content: center; /* Centers the content horizontally */
-  align-items: center; /* Centers the content vertically */
-  min-width: 320px;
-  height: 100vh;
-}
-
+/* Adjustments for headings */
 h1 {
   font-size: 3.2em;
   line-height: 1.1;
 }
 
+/* Button styling */
 button {
   border-radius: 8px;
   border: 1px solid transparent;
@@ -54,6 +61,7 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
+/* Light mode preferences */
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
@@ -64,5 +72,44 @@ button:focus-visible {
   }
   button {
     background-color: #f9f9f9;
+  }
+}
+
+/* Media queries for responsiveness */
+@media (max-width: 1024px) {
+  /* Adjust body font size for tablets and smaller laptops */
+  body {
+    font-size: 0.9rem;
+  }
+  h1 {
+    font-size: 2.8em;
+  }
+}
+
+@media (max-width: 768px) {
+  body {
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: 1rem;
+  }
+  h1 {
+    font-size: 2em;
+  }
+  button {
+    padding: 0.5em 1em;
+    font-size: 0.9em;
+  }
+}
+
+@media (max-width: 480px) {
+  body {
+    font-size: 0.8rem;
+  }
+  h1 {
+    font-size: 1.6em;
+  }
+  button {
+    padding: 0.4em 0.8em;
+    font-size: 0.8em;
   }
 }

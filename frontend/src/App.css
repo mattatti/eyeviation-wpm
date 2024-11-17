@@ -1,21 +1,15 @@
-body {
-  margin: 0;
-  display: flex;
-  justify-content: center; /* Centers the content horizontally */
-  align-items: center; /* Centers the content vertically */
-  min-width: 320px;
-  width: 100%; /* Ensure body takes full width */
-  height: 100vh;
-}
+/* app.css */
 
+/* Ensure full width and height for the root container */
 #root {
-  width: 100%; /* Ensure root container is 100% width */
-  height: 100%; /* Take full height */
+  width: 100%;
+  height: 100%;
   display: flex;
   justify-content: center;
-  padding: 10rem;
+  padding: 2rem; /* Reduced padding for smaller screens */
 }
 
+/* Styling for the logo */
 .logo {
   height: 6em;
   padding: 1.5em;
@@ -29,6 +23,7 @@ body {
   filter: drop-shadow(0 0 2em #61dafbaa);
 }
 
+/* Animation for logo */
 @keyframes logo-spin {
   from {
     transform: rotate(0deg);
@@ -44,10 +39,51 @@ body {
   }
 }
 
+/* Responsive card styling */
 .card {
   padding: 2em;
+  width: 100%; /* Ensure card takes up full width on smaller screens */
+  max-width: 400px; /* Limit card width for better readability */
+  margin: 1rem;
 }
 
 .read-the-docs {
   color: #888;
+}
+
+/* Media queries for responsiveness */
+@media (max-width: 1024px) {
+  #root {
+    padding: 1rem;
+  }
+  .card {
+    max-width: 350px;
+  }
+}
+
+@media (max-width: 768px) {
+  #root {
+    flex-direction: column;
+    padding: 1rem;
+  }
+  .logo {
+    height: 5em;
+    padding: 1em;
+  }
+  .card {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  #root {
+    padding: 0.5rem;
+  }
+  .logo {
+    height: 4em;
+    padding: 0.8em;
+  }
+  .card {
+    padding: 1.5em;
+  }
 }

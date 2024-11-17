@@ -1,10 +1,17 @@
 import { Box, Button, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import AddWeaponDialog from '../components/AddWeaponDialog';
 import WeaponTable from '../components/WeaponsTable';
+import {
+  addNotificationThunk,
+  fetchNotifications,
+} from '../redux/notificationSlice';
 import { CustomizedWeapon } from '../types';
 
 const WeaponsManagement: React.FC = () => {
+  const dispatch = useDispatch();
+
   const [weapons, setWeapons] = useState<CustomizedWeapon[]>([]);
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
 
@@ -19,6 +26,10 @@ const WeaponsManagement: React.FC = () => {
   useEffect(() => {
     fetchWeapons();
   }, []);
+
+  useEffect(() => {
+    dispatch(fetchNotifications());
+  }, [dispatch]);
 
   const handleWeaponAdd = (weapon: CustomizedWeapon) => {
     setWeapons((prevWeapons) => [weapon, ...prevWeapons]);
@@ -63,10 +74,17 @@ const WeaponsManagement: React.FC = () => {
       .then(async (res) => {
         if (res.ok) {
           const data = await res.json();
-          alert(data.message);
+
+          dispatch(
+            addNotificationThunk({
+              message: data.message,
+            })
+          );
         } else {
           const errorData = await res.json();
-          alert(errorData.message || 'Failed to send weapon to printer');
+          console.error(
+            errorData.message || 'Failed to send weapon to printer'
+          );
         }
       })
       .catch((err) => {

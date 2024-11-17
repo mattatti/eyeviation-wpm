@@ -1,6 +1,7 @@
 import cors from 'cors';
 import express from 'express';
 import { sequelize } from './config/db';
+import notificationRoutes from './routes/notificationRoutes'; // Adjust the path as necessary
 import weaponRoutes from './routes/weaponRoutes';
 import { insertData } from './seed/seedWeapons';
 
@@ -10,6 +11,7 @@ const PORT = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 app.use('/api', weaponRoutes);
+app.use('/api', notificationRoutes);
 
 // Sync the database and insert data after connection is successful
 sequelize

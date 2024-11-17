@@ -10,7 +10,8 @@ import {
   Select,
 } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-import { useNotification } from '../context/NotificationContext';
+import { useDispatch } from 'react-redux';
+import { addNotificationThunk } from '../redux/notificationSlice';
 import { CustomizedWeapon, WeaponParts } from '../types';
 
 interface Props {
@@ -20,7 +21,10 @@ interface Props {
 }
 
 const AddWeaponDialog: React.FC<Props> = ({ open, onClose, onWeaponAdd }) => {
-  const { addNotification } = useNotification();
+  const dispatch = useDispatch();
+  // const { notifications, loading, error } = useSelector(
+  //   (state: any) => state.Notification
+  // );
   const [baseWeapons, setBaseWeapons] = useState<any[]>([]);
   const [attachments, setAttachments] = useState<any>({
     sights: [],
@@ -60,7 +64,6 @@ const AddWeaponDialog: React.FC<Props> = ({ open, onClose, onWeaponAdd }) => {
       setBaseWeapons(data);
     } catch (error) {
       console.error('Failed to fetch base weapons:', error);
-      addNotification('Failed to fetch base weapons');
     }
   };
 
@@ -91,7 +94,6 @@ const AddWeaponDialog: React.FC<Props> = ({ open, onClose, onWeaponAdd }) => {
       console.log('attachments ', attachments);
     } catch (error) {
       console.error('Failed to fetch attachments:', error);
-      addNotification('Failed to fetch attachments');
     }
   };
 
@@ -140,18 +142,20 @@ const AddWeaponDialog: React.FC<Props> = ({ open, onClose, onWeaponAdd }) => {
           const data = await res.json();
           onClose();
           handleReset();
-          addNotification(data.message);
+          dispatch(
+            addNotificationThunk({
+              message: data.message,
+            })
+          );
         } else {
           const errorData = await res.json();
           console.error(
             errorData.message || 'Failed to send weapon to printer'
           );
-          addNotification(`Failed to print weapon: ${errorData.message}`);
         }
       })
       .catch((err) => {
         console.error(err);
-        addNotification(`Failed to print weapon: ${err.message}`);
       });
   };
 

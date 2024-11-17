@@ -1,16 +1,17 @@
 // app.tsx
 import React from 'react';
+import { Provider } from 'react-redux';
 import NavBar from './components/NavBar';
-import { NotificationProvider } from './context/NotificationContext';
 import WeaponsManagement from './pages/WeaponsManagement';
+import store from './redux/store';
 
 const App: React.FC = () => {
   return (
     <div className='App'>
-      <NotificationProvider>
+      <Provider store={store}>
         <NavBar />
         <WeaponsManagement />
-      </NotificationProvider>
+      </Provider>
     </div>
   );
 };
