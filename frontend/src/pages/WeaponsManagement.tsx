@@ -102,12 +102,13 @@ const WeaponsManagement: React.FC = () => {
         top: 10,
         width: '-webkit-fill-available',
         margin: 10,
+        marginTop: 45,
         display: 'flex',
         flexDirection: 'column',
         gap: 10,
       }}
     >
-      <Typography fontWeight={'bold'} fontSize={20} color='black'>
+      <Typography fontWeight={'bold'} fontSize={18} color='black'>
         Weapon Printing Management
       </Typography>
       <Button
