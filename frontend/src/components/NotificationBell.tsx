@@ -21,7 +21,7 @@ const NotificationBell: React.FC = () => {
   );
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null); // To control menu open/close
-  const [unreadCount, setUnreadCount] = useState();
+  const [unreadCount, setUnreadCount] = useState<number>(0);
 
   // Fetch notifications when component mounts
   useEffect(() => {
@@ -43,6 +43,32 @@ const NotificationBell: React.FC = () => {
 
   const handleCloseMenu = () => {
     setAnchorEl(null); // Close the menu
+  };
+
+  const renderNotifications = () => {
+    if (notifications.length > 0) {
+      return notifications.map((notification: any, index: number) => (
+        <div key={notification.id + notification.timestamp}>
+          <MenuItem>
+            <Typography variant='body2'>
+              {notification.message} -{' '}
+              {new Date(notification.timestamp).toLocaleTimeString()}
+            </Typography>
+          </MenuItem>
+          {index < notifications.length - 1 && (
+            <Divider
+              key={`divider-${notification.id}-${notification.timestamp}`}
+            />
+          )}
+        </div>
+      ));
+    } else {
+      return (
+        <MenuItem key='no-notifications' onClick={handleCloseMenu}>
+          <Typography variant='body2'>No new notifications</Typography>
+        </MenuItem>
+      );
+    }
   };
 
   return (
@@ -81,23 +107,7 @@ const NotificationBell: React.FC = () => {
           },
         }}
       >
-        {notifications.length > 0 ? (
-          notifications.map((notification: any, index: number) => (
-            <React.Fragment key={notification.id}>
-              <MenuItem>
-                <Typography variant='body2'>
-                  {notification.message} -{' '}
-                  {new Date(notification.timestamp).toLocaleTimeString()}
-                </Typography>
-              </MenuItem>
-              {index < notifications.length - 1 && <Divider />}
-            </React.Fragment>
-          ))
-        ) : (
-          <MenuItem onClick={handleCloseMenu}>
-            <Typography variant='body2'>No new notifications</Typography>
-          </MenuItem>
-        )}
+        {renderNotifications()}
       </Menu>
     </div>
   );
