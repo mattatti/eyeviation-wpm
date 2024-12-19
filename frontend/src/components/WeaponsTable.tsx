@@ -55,7 +55,7 @@ const WeaponTable: React.FC<WeaponTableProps> = ({
       headerName: 'Created At',
       width: 200,
       sortable: true,
-      valueFormatter: (params: any) => {
+      valueFormatter: (params: never) => {
         return format(new Date(params), 'dd-MM-yyyy HH:mm:ss');
       },
     },
