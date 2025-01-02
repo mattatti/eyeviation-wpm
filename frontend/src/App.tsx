@@ -1,19 +1,17 @@
-// app.tsx
 import React from 'react';
-import { Provider } from 'react-redux';
-import NavBar from './components/NavBar';
-import WeaponsManagement from './pages/WeaponsManagement';
-import store from './redux/store';
+import AddUserForm from './components/AddUserForm';
+import AddHobbyForm from './components/AddHobbyForm';
+import IndexResultsPage from './components/IndexResultsPage';
 
 const App: React.FC = () => {
-  return (
-    <div className='App'>
-      <Provider store={store}>
-        <NavBar />
-        <WeaponsManagement />
-      </Provider>
-    </div>
-  );
+    return (
+        <div>
+            <h1>User Management</h1>
+            <AddUserForm/>
+            <AddHobbyForm/>
+            <IndexResultsPage/>
+        </div>
+    );
 };
 
 export default App;
